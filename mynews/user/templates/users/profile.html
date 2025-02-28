@@ -1,0 +1,14 @@
+{% extends "news/base.html" %}
+{% block title%} Edit Profile {% endblock%}
+{% block nav_extra %} {% endblock %}
+{% block content %}
+<h1>Profile</h1>
+<p>Username: {{ user.username }}</p>
+<p>Bio: {{ user.bio }}</p>
+<p>Email: {{ user.email }}</p>
+<p>Phone Number: {{ user.phone_number }}</p>
+{% if user.profile_picture %}
+    <img src="{{ user.profile_picture.url }}" alt="Profile Picture" width="200">
+{% endif %}
+<a href="{% url 'edit_profile' %}">Edit Profile</a>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "news/base.html" %}
+{% block title%} Confirm Delete {% endblock%}
+{% block nav_extra %} {% endblock %}
+{% block content %}
+<h1>Confirm Delete</h1>
+
+<p>Are you sure you want to delete the post "{{ post.title }}"?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Yes, delete</button>
+    <a href="{% url 'post_detail'  slug=post.slug %}">No, go back</a> 
+ </form>
+
+ {% endblock %}

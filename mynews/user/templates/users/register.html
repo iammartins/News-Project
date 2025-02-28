@@ -1,0 +1,20 @@
+{% extends "news/base.html" %}
+{% block title%}Register user {% endblock%}
+{% block nav_extra %} {% endblock %}
+
+{% block content %}
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+    
+        {% if form.non_field_errors %}  <div class="alert alert-danger">
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    
+        {{ form.as_p }}  <button type="submit">Register</button>
+    </form>
+
+{% endblock%}

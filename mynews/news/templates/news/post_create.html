@@ -1,0 +1,15 @@
+{% extends "news/base.html" %}
+{% block title%}Create New Post {% endblock%}
+{% block nav_extra %} {% endblock %}
+{% block content %}
+<h2>Create New Post</h2>
+<br/>
+  <div class="form-group">
+        <form method="post" enctype="multipart/form-data"> 
+            {% csrf_token %}
+            {{ form.media }}
+            {{ form.as_p }}
+            <button type="submit">Create Post</button>
+        </form>
+    </div>
+{% endblock%}

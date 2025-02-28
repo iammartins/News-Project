@@ -1,0 +1,13 @@
+{% extends "news/base.html" %}
+{% block title%} Edit Profile {% endblock%}
+{% block nav_extra %} {% endblock %}
+{% block content %}
+<h1>Edit Profile</h1>
+<form method="post" enctype="multipart/form-data">  </p> <div id="like-unlike-container">
+    {% csrf_token %}
+    {{ form.media }}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+</form>
+<a href="{% url 'view_profile' %}">Cancel</a>
+{% endblock %}

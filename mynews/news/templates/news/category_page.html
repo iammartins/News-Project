@@ -1,0 +1,16 @@
+{% extends "news/base.html" %}
+{% block nav_extra %} {% endblock %}
+{% block content %}
+<h1>{{ category.name }}</h1>  </p>
+    {% if posts %}
+        <ul>
+            {% for post in posts %}
+                <li>
+                    <a href="{% url 'post_detail' slug=post.slug %}">{{ post.title }}</a> ({{ post.author }})
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No posts in this category yet.</p>
+    {% endif %}
+{% endblock%}

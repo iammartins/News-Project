@@ -1,0 +1,157 @@
+{% extends "news/base.html" %}
+{% block nav_extra %} {% endblock %}
+{% block title%} {{ post.title }} {% endblock%}
+{% block content %}
+
+<h1>{{ post.title }}</h1>
+<p>By: {{ post.author }} | {% if post.category %}{{ post.category.name }}{% endif %} | {{ post.created_at }}</p>
+
+    {% if user == post.author or user.is_superuser %}
+        <a href="{% url 'edit_post'  slug=post.slug %}">Edit</a>
+    {% endif %}
+
+    {% if user == post.author or user.is_superuser %}
+        <a href="{% url 'delete_post' slug=post.slug %}">Delete</a>
+    {% endif %}
+    
+        <!-- <form id="like-unlike-container">
+            <button data-post-id="{{ post.id }}" data-action="like">
+                Like <span id="like-count">{{ post.likes.count }}</span>
+            </button>
+            <button data-post-id="{{ post.id }}" data-action="unlike">
+                Unlike <span id="unlike-count">{{ post.unlikes.count }}</span>
+            </button>
+            {% csrf_token %}
+        </form> -->
+       
+    {% if post.image %}  
+     <img src="{{ post.image.url }}" alt="{{ post.title }}" width="300">
+    {% endif %}
+
+<p>{{ post.content |safe }}</p> 
+<br></br>
+<h2>Comments</h2>
+    {% for comment in comments %}
+        <div class="comment">
+            <p>
+                <strong>
+                    {% if comment.user %}
+                        {{ comment.user.username }}
+                    {% else %}
+                        {{ comment.name|default:"Anonymous" }}
+                    {% endif %}
+                </strong>: {{ comment.content }}
+            </p>
+            <p class="comment-date">{{ comment.timestamp }}</p>
+
+            {% if request.user.is_authenticated or not comment.user %}
+                <a href="#" class="reply-link" data-parent-id="{{ comment.id }}">Reply</a>
+            {% endif %}
+
+            {% for reply in comment.replies.all %}
+                <div class="reply">
+                    <p>
+                        <strong>
+                            {% if reply.user %}
+                                {{ reply.user.username }}
+                            {% else %}
+                                {{ reply.name|default:"Anonymous" }}
+                            {% endif %}
+                        </strong>: {{ reply.content }}
+                    </p>
+                    <p class="comment-date">{{ reply.timestamp }}</p>
+                </div>
+            {% endfor %}
+
+            <div class="reply-form" id="reply-form-{{ comment.id }}" style="display:none;">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <input type="hidden" name="parent" value="{{ comment.id }}">
+                    <button type="submit">Submit Reply</button>
+                </form>
+            </div>
+
+        </div>
+    {% endfor %}
+
+    <h2>Add a Comment</h2>
+    <form method="post">
+        {% csrf_token %}
+        {% if not request.user.is_authenticated %}
+         <p>Your Name: <input type="text" name="name"></p>
+        {% endif %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+<br></br>
+<a href="{% url 'post_list' %}" class="btn btn-secondary">Back</a>
+
+
+<script>
+    const replyLinks = document.querySelectorAll('.reply-link');
+    replyLinks.forEach(link => {
+        link.addEventListener('click', function(event) {
+            event.preventDefault();
+            const parentId = this.dataset.parentId;
+            const replyForm = document.getElementById(`reply-form-${parentId}`);
+            replyForm.style.display = 'block';
+        });
+    });
+</script>    
+
+<script>
+            document.addEventListener('DOMContentLoaded', function() {
+        const likeUnlikeContainer = document.getElementById('like-unlike-container');
+
+        if (likeUnlikeContainer) {
+            likeUnlikeContainer.addEventListener('click', (event) => {
+                const button = event.target.closest('button');
+                if (button) {
+                    const postId = button.dataset.postId;
+                    const action = button.dataset.action;
+
+                    const formData = new URLSearchParams();
+                    formData.append('action', action);
+
+                    const csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value || document.querySelector('#csrf-token input[name=csrfmiddlewaretoken]').value;
+                    if (!csrfToken) {
+                        console.error("CSRF token not found!");
+                        alert("CSRF token is missing. Please try again.");
+                        return;
+                    }
+
+                    fetch(`/post/${postId}/like_unlike/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'X-CSRFToken': csrfToken,
+                        },
+                        body: formData,
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.text().then(text => { throw new Error(text) })
+                        }
+                        return response.json()
+                    })
+                    .then(data => {
+                        // ... (handle data as before)
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        alert("An error occurred. Please try again.");
+                    });
+                }
+            });
+        } else {
+            console.warn("Like/Unlike container not found on this page.");
+        }
+    });
+</script>
+{% endblock %}
+
+
+
+
+

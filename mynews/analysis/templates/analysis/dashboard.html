@@ -1,0 +1,99 @@
+<h1>Analysis Dashboard</h1>
+
+<h2>Recent Site Visits</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Timestamp</th>
+            <th>User</th>
+            <th>Page URL</th>
+            <th>Referer</th>
+            <th>User Agent</th>
+            <th>Device Type</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for visit in recent_visits %}
+            <tr>
+                <td>{{ visit.timestamp }}</td>
+                <td>{{ visit.user|default:"Anonymous" }}</td>
+                <td>{{ visit.page_url }}</td>
+                <td>{{ visit.http_referer }}</td>
+                <td>{{ visit.user_agent }}</td>
+                <td>{{ visit.device_type }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Daily Site Visits</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Visits</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for visit in daily_visits %}
+            <tr>
+                <td>{{ visit.visit_date }}</td>
+                <td>{{ visit.count }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Post Views by Device Type</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Device Type</th>
+            <th>Count</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in post_views_by_device %}
+            <tr>
+                <td>{{ item.device_type }}</td>
+                <td>{{ item.count }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Category Reads by Device Type</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Device Type</th>
+            <th>Count</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in category_reads_by_device %}
+            <tr>
+                <td>{{ item.device_type }}</td>
+                <td>{{ item.count }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>User Activity by Action</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Action</th>
+            <th>Count</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in user_activity_by_action %}
+            <tr>
+                <td>{{ item.action }}</td>
+                <td>{{ item.count }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
